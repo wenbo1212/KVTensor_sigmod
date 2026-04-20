@@ -1,0 +1,9 @@
+model_size,platform,mode,spearman,top5_hit_count,top1_slowdown_pct,candidate_count,top1_predicted,top1_actual
+3b,4c8g,decode,0.5352941176470588,2,32.10751276037796,16,cfg_c128_w1_ms2g_mb6g_t4,cfg_c512_w1_ms0g_mb8g_t4
+3b,4c8g,prefill,0.9441176470588235,4,18.624858329429884,16,cfg_c256_w1_ms0g_mb8g_t4,cfg_c512_w1_ms0g_mb8g_t4
+3b,8c16g,decode,0.25,2,14.961999789563052,16,cfg_c512_w1_ms8g_mb8g_t8,cfg_c512_w1_ms0g_mb16g_t8
+3b,8c16g,prefill,0.9439569093506098,5,0.0,16,cfg_c512_w1_ms0g_mb16g_t8,cfg_c512_w1_ms0g_mb16g_t8
+8b,4c8g,decode,0.3735294117647059,4,0.0,16,cfg_c128_w1_ms0g_mb8g_t4,cfg_c128_w1_ms0g_mb8g_t4
+8b,4c8g,prefill,0.7588235294117647,3,0.0,16,cfg_c512_w1_ms0g_mb8g_t4,cfg_c512_w1_ms0g_mb8g_t4
+8b,8c16g,decode,0.7352941176470589,3,0.0,16,cfg_c512_w1_ms4g_mb12g_t8,cfg_c512_w1_ms4g_mb12g_t8
+8b,8c16g,prefill,0.9852941176470589,5,0.0,16,cfg_c512_w1_ms0g_mb16g_t8,cfg_c512_w1_ms0g_mb16g_t8

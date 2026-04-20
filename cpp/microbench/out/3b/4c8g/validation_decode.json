@@ -1,0 +1,45 @@
+{
+  "platform_id": "4c8g",
+  "mode": "decode",
+  "spearman": 0.5352941176470588,
+  "top1_predicted": "cfg_c128_w1_ms2g_mb6g_t4",
+  "top1_actual": "cfg_c512_w1_ms0g_mb8g_t4",
+  "top5_hit_count": 2,
+  "worst_rank_inversions": [
+    {
+      "abs_rank_gap": 10,
+      "id": "cfg_c128_w1_ms4g_mb4g_t4",
+      "predicted_rank": 2,
+      "actual_rank": 12,
+      "actual_value_ms": 1398.4130638
+    },
+    {
+      "abs_rank_gap": 9,
+      "id": "cfg_c128_w1_ms2g_mb6g_t4",
+      "predicted_rank": 1,
+      "actual_rank": 10,
+      "actual_value_ms": 1158.3498984
+    },
+    {
+      "abs_rank_gap": 7,
+      "id": "cfg_c512_w1_ms6g_mb2g_t4",
+      "predicted_rank": 12,
+      "actual_rank": 5,
+      "actual_value_ms": 995.1998508
+    },
+    {
+      "abs_rank_gap": 7,
+      "id": "cfg_c512_w1_ms0g_mb8g_t4",
+      "predicted_rank": 8,
+      "actual_rank": 1,
+      "actual_value_ms": 876.8236372
+    },
+    {
+      "abs_rank_gap": 4,
+      "id": "cfg_c256_w1_ms0g_mb8g_t4",
+      "predicted_rank": 6,
+      "actual_rank": 2,
+      "actual_value_ms": 899.126303
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "name": "llama32_3b_prefill_seq512_profile",
+  "dtype": "bfloat16",
+  "chunk_axis": "column",
+  "chunk_rows": 3072,
+  "thread_count": 8,
+  "total_memory_bytes": 68719476736,
+  "default_operator_class": "prefill_gemm",
+  "total_flops": 482000000000000.0,
+  "baseline": {
+    "streamed_bytes_by_chunk_size": {
+      "64": 6425149440,
+      "128": 6425149440,
+      "256": 6425149440,
+      "512": 6425149440
+    },
+    "streamed_chunks_by_chunk_size": {
+      "64": 49020,
+      "128": 24510,
+      "256": 12255,
+      "512": 6128
+    }
+  },
+  "segments": [
+    {
+      "id": "attn_prefill",
+      "operator_class": "prefill_gemm",
+      "flops": 200000000000000.0,
+      "streamed_bytes_by_chunk_size": {
+        "64": 2570059776,
+        "128": 2570059776,
+        "256": 2570059776,
+        "512": 2570059776
+      },
+      "streamed_chunks_by_chunk_size": {
+        "64": 19608,
+        "128": 9804,
+        "256": 4902,
+        "512": 2451
+      }
+    },
+    {
+      "id": "mlp_prefill",
+      "operator_class": "prefill_gemm",
+      "flops": 240000000000000.0,
+      "streamed_bytes_by_chunk_size": {
+        "64": 3341077709,
+        "128": 3341077709,
+        "256": 3341077709,
+        "512": 3341077709
+      },
+      "streamed_chunks_by_chunk_size": {
+        "64": 25491,
+        "128": 12746,
+        "256": 6373,
+        "512": 3187
+      }
+    },
+    {
+      "id": "lm_head_prefill",
+      "operator_class": "prefill_gemm",
+      "flops": 42000000000000.0,
+      "streamed_bytes_by_chunk_size": {
+        "64": 514011955,
+        "128": 514011955,
+        "256": 514011955,
+        "512": 514011955
+      },
+      "streamed_chunks_by_chunk_size": {
+        "64": 3922,
+        "128": 1961,
+        "256": 981,
+        "512": 491
+      }
+    }
+  ],
+  "tensors": [
+    {
+      "name": "tok_embeddings",
+      "size_bytes": 786432000,
+      "stream_access_count": 1
+    },
+    {
+      "name": "lm_head",
+      "size_bytes": 786432000,
+      "stream_access_count": 1
+    },
+    {
+      "name": "attn_proj_blocks",
+      "size_bytes": 1572864000,
+      "stream_access_count": 1
+    },
+    {
+      "name": "mlp_up_gate",
+      "size_bytes": 2097152000,
+      "stream_access_count": 1
+    },
+    {
+      "name": "mlp_down",
+      "size_bytes": 1048576000,
+      "stream_access_count": 1
+    },
+    {
+      "name": "norms",
+      "size_bytes": 131072000,
+      "stream_access_count": 1
+    },
+    {
+      "name": "misc",
+      "size_bytes": 2621440,
+      "stream_access_count": 1
+    }
+  ]
+}

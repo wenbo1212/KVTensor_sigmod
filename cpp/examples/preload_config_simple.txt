@@ -1,0 +1,40 @@
+# Simple preload configuration example
+# Preload every other layer (0,2,4,...,20) for QKV / gate_up / down projections
+transformer.0.attn_qkv_proj
+transformer.2.attn_qkv_proj
+transformer.4.attn_qkv_proj
+transformer.6.attn_qkv_proj
+transformer.8.attn_qkv_proj
+transformer.10.attn_qkv_proj
+transformer.12.attn_qkv_proj
+transformer.14.attn_qkv_proj
+transformer.16.attn_qkv_proj
+transformer.18.attn_qkv_proj
+transformer.20.attn_qkv_proj
+
+transformer.0.ffn_gate_up_proj
+transformer.2.ffn_gate_up_proj
+transformer.4.ffn_gate_up_proj
+transformer.6.ffn_gate_up_proj
+transformer.8.ffn_gate_up_proj
+transformer.10.ffn_gate_up_proj
+transformer.12.ffn_gate_up_proj
+transformer.14.ffn_gate_up_proj
+transformer.16.ffn_gate_up_proj
+transformer.18.ffn_gate_up_proj
+transformer.20.ffn_gate_up_proj
+
+transformer.0.ffn_down_proj
+transformer.2.ffn_down_proj
+transformer.4.ffn_down_proj
+transformer.6.ffn_down_proj
+transformer.8.ffn_down_proj
+transformer.10.ffn_down_proj
+transformer.12.ffn_down_proj
+transformer.14.ffn_down_proj
+transformer.16.ffn_down_proj
+transformer.18.ffn_down_proj
+transformer.20.ffn_down_proj
+
+# Preload output projection
+#output.output_proj

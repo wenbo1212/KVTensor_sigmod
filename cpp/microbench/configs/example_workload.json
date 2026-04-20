@@ -1,0 +1,77 @@
+{
+  "name": "example_decode_profile",
+  "dtype": "bfloat16",
+  "chunk_axis": "column",
+  "chunk_rows": 4096,
+  "thread_count": 8,
+  "total_memory_bytes": 68719476736,
+  "default_operator_class": "decode_gemv",
+  "total_flops": 120000000000.0,
+  "baseline": {
+    "streamed_bytes_by_chunk_size": {
+      "64": 2147483648,
+      "128": 2147483648,
+      "256": 2147483648,
+      "512": 2147483648
+    },
+    "streamed_chunks_by_chunk_size": {
+      "64": 16384,
+      "128": 8192,
+      "256": 4096,
+      "512": 2048
+    }
+  },
+  "segments": [
+    {
+      "id": "decode_main",
+      "operator_class": "decode_gemv",
+      "flops": 90000000000.0,
+      "streamed_bytes_by_chunk_size": {
+        "64": 1717986918,
+        "128": 1717986918,
+        "256": 1717986918,
+        "512": 1717986918
+      },
+      "streamed_chunks_by_chunk_size": {
+        "64": 13108,
+        "128": 6554,
+        "256": 3277,
+        "512": 1639
+      }
+    },
+    {
+      "id": "decode_lm_head",
+      "operator_class": "decode_gemv",
+      "flops": 30000000000.0,
+      "streamed_bytes_by_chunk_size": {
+        "64": 429496730,
+        "128": 429496730,
+        "256": 429496730,
+        "512": 429496730
+      },
+      "streamed_chunks_by_chunk_size": {
+        "64": 3277,
+        "128": 1639,
+        "256": 820,
+        "512": 410
+      }
+    }
+  ],
+  "tensors": [
+    {
+      "name": "decode_block_a",
+      "size_bytes": 536870912,
+      "stream_access_count": 1
+    },
+    {
+      "name": "decode_block_b",
+      "size_bytes": 805306368,
+      "stream_access_count": 1
+    },
+    {
+      "name": "decode_block_c",
+      "size_bytes": 805306368,
+      "stream_access_count": 1
+    }
+  ]
+}

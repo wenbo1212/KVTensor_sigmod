@@ -1,0 +1,34 @@
+{
+  "system": {
+    "total_memory_bytes": 8589934592
+  },
+  "candidates": [
+    {
+      "id": "cfg_c64_w2_ms2g_mb6g_t4",
+      "chunk_size": 64,
+      "prefetch_window": 2,
+      "static_memory_bytes": 2147483648,
+      "bufferpool_bytes": 6442450944,
+      "thread_count": 4,
+      "dtype": "bfloat16"
+    },
+    {
+      "id": "cfg_c128_w2_ms4g_mb4g_t4",
+      "chunk_size": 128,
+      "prefetch_window": 2,
+      "static_memory_bytes": 4294967296,
+      "bufferpool_bytes": 4294967296,
+      "thread_count": 4,
+      "dtype": "bfloat16"
+    },
+    {
+      "id": "cfg_c256_w2_ms6g_mb2g_t4",
+      "chunk_size": 256,
+      "prefetch_window": 2,
+      "static_memory_bytes": 6442450944,
+      "bufferpool_bytes": 2147483648,
+      "thread_count": 4,
+      "dtype": "bfloat16"
+    }
+  ]
+}

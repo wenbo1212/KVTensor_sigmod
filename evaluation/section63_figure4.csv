@@ -1,0 +1,5 @@
+platform,chunk_size,cache_policy,prefill_s,decode_s
+8c16g,512,no cache,9.25,3.78
+8c16g,512,os page cache (cold),18.93,7.73
+8c16g,512,os page cache (hot),3.27,1.03
+8c16g,512,bufferpool,2.35,0.67

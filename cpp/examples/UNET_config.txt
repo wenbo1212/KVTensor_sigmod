@@ -1,0 +1,159 @@
+========================================
+SD 1.5 UNet (UNet2DConditionModel)
+config: in_channels=4, out_channels=4, block_out_channels=[320,640,1280,1280],
+        layers_per_block=2, cross_attention_dim=768, attention_head_dim=8
+        down_blocks=[XAttn, XAttn, XAttn, Down], up_blocks=[Up, XAttn, XAttn, XAttn]
+========================================
+UNet2DConditionModel(
+  (conv_in): Conv2d(4, 320, k=3x3)
+    W: (320, 4, 3, 3), b: (320,)
+
+  (time_embedding): TimestepEmbedding(  # time embedding dim = 4*320 = 1280
+    (linear_1): Linear(320 -> 1280)
+      W: (1280, 320), b: (1280,)
+    (linear_2): Linear(1280 -> 1280)
+      W: (1280, 1280), b: (1280,)
+  )
+
+  (down_blocks): 4 blocks
+    (0): CrossAttnDownBlock2D(ch=320)  [resnets x2, attn x2, downsample]
+      ResnetBlock2D(320 -> 320) x2:
+        (conv1): Conv2d(320,320,3x3)  W:(320,320,3,3) b:(320,)
+        (time_emb_proj): Linear(1280->320) W:(320,1280) b:(320,)
+        (conv2): Conv2d(320,320,3x3)  W:(320,320,3,3) b:(320,)
+        (norm1): GroupNorm(32,320)     W:(320,) b:(320,)
+        (norm2): GroupNorm(32,320)     W:(320,) b:(320,)
+      Transformer2DModel(dim=320) x2 (each has BasicTransformerBlock x1):
+        BasicTransformerBlock(dim=320, heads=40, dim_head=8)
+          (norm1): LayerNorm(320) W:(320,) b:(320,)
+          (attn1 self): CrossAttention
+            (to_q): Linear(320->320, bias=False) W:(320,320)
+            (to_k): Linear(320->320, bias=False) W:(320,320)
+            (to_v): Linear(320->320, bias=False) W:(320,320)
+            (to_out.0): Linear(320->320) W:(320,320) b:(320,)
+          (norm2): LayerNorm(320) W:(320,) b:(320,)
+          (attn2 cross): CrossAttention(context=768)
+            (to_q): Linear(320->320, bias=False) W:(320,320)
+            (to_k): Linear(768->320, bias=False) W:(320,768)
+            (to_v): Linear(768->320, bias=False) W:(320,768)
+            (to_out.0): Linear(320->320) W:(320,320) b:(320,)
+          (norm3): LayerNorm(320) W:(320,) b:(320,)
+          (ff): FeedForward (GEGLU)
+            (proj): Linear(320->2560) W:(2560,320) b:(2560,)     # 2560 = 8*320
+            (out):  Linear(1280->320) W:(320,1280) b:(320,)      # 1280 = 4*320
+        (proj_in):  Conv2d(320,320,1x1) W:(320,320,1,1) b:(320,)
+        (proj_out): Conv2d(320,320,1x1) W:(320,320,1,1) b:(320,)
+      (downsamplers.0.conv): Conv2d(320,320,3x3,stride=2)
+        W:(320,320,3,3) b:(320,)
+
+    (1): CrossAttnDownBlock2D(ch=640)  [resnets x2, attn x2, downsample]
+      Resnet(320->640) then Resnet(640->640):
+        (conv_shortcut) only in first Resnet: Conv2d(320,640,1x1) W:(640,320,1,1) b:(640,)
+      Transformer2DModel(dim=640) x2, heads=80:
+        (attn2.to_k / to_v): Linear(768->640,bias=False) W:(640,768)
+        (ff.proj): Linear(640->5120) W:(5120,640) b:(5120,)       # 8*640
+        (ff.out):  Linear(2560->640) W:(640,2560) b:(640,)        # 4*640
+      (downsamplers.0.conv): Conv2d(640,640,3x3,stride=2)
+        W:(640,640,3,3) b:(640,)
+
+    (2): CrossAttnDownBlock2D(ch=1280) [resnets x2, attn x2, downsample]
+      Resnet(640->1280) then Resnet(1280->1280):
+        (conv_shortcut) only in first Resnet: Conv2d(640,1280,1x1) W:(1280,640,1,1) b:(1280,)
+      Transformer2DModel(dim=1280) x2, heads=160:
+        (attn2.to_k / to_v): Linear(768->1280,bias=False) W:(1280,768)
+        (ff.proj): Linear(1280->10240) W:(10240,1280) b:(10240,)  # 8*1280
+        (ff.out):  Linear(5120->1280)  W:(1280,5120)  b:(1280,)   # 4*1280
+      (downsamplers.0.conv): Conv2d(1280,1280,3x3,stride=2)
+        W:(1280,1280,3,3) b:(1280,)
+
+    (3): DownBlock2D(ch=1280) [resnets x2, no attn, no downsample]
+      Resnet(1280->1280) x2 (same tensor shapes as above for 1280)
+
+  (mid_block): UNetMidBlock2DCrossAttn(ch=1280) [resnet, attn, resnet]
+    Resnet(1280->1280) x2 (same as 1280)
+    Transformer2DModel(dim=1280) x1 (same attention/ff tensor shapes as 1280 cross-attn)
+
+  (up_blocks): 4 blocks
+    (0): UpBlock2D(ch=1280) [resnets x3, upsample]
+      Resnet inputs are concatenated skip+hidden, so conv1 in_channels vary:
+        First Resnet typically sees (1280 + 1280)=2560 -> 1280:
+          (conv1): Conv2d(2560,1280,3x3) W:(1280,2560,3,3) b:(1280,)
+          (conv_shortcut): Conv2d(2560,1280,1x1) W:(1280,2560,1,1) b:(1280,)
+      (upsamplers.0.conv): Conv2d(1280,1280,3x3) W:(1280,1280,3,3) b:(1280,)
+
+    (1): CrossAttnUpBlock2D(ch=1280) [resnets x3, attn x3, upsample]
+      Each Transformer2DModel is dim=1280 (same shapes as 1280 above)
+      (upsamplers.0.conv): Conv2d(1280,1280,3x3) W:(1280,1280,3,3) b:(1280,)
+
+    (2): CrossAttnUpBlock2D(ch=640)  [resnets x3, attn x3, upsample]
+      Transformer2DModel dim=640 (same as 640 above)
+      (upsamplers.0.conv): Conv2d(640,640,3x3) W:(640,640,3,3) b:(640,)
+
+    (3): CrossAttnUpBlock2D(ch=320)  [resnets x3, attn x3, upsample]
+      Transformer2DModel dim=320 (same as 320 above)
+      (upsamplers.0.conv): Conv2d(320,320,3x3) W:(320,320,3,3) b:(320,)
+
+  (conv_norm_out): GroupNorm(32, 320)  W:(320,) b:(320,)
+  (conv_out): Conv2d(320, 4, k=3x3)
+    W:(4,320,3,3) b:(4,)
+)
+
+========================================
+SD 1.5 VAE (AutoencoderKL)
+config: in_channels=3, out_channels=3, latent_channels=4,
+        block_out_channels=[128,256,512,512], layers_per_block=2
+========================================
+AutoencoderKL(
+  (encoder):
+    (conv_in): Conv2d(3,128,3x3) W:(128,3,3,3) b:(128,)
+    (down_blocks): 4 blocks, each Resnet x2, with downsample conv (except last)
+      Block0 (128):
+        Resnet(128->128) x2:
+          conv1 W:(128,128,3,3) b:(128,)
+          time_emb_proj: (not used in VAE resnets)
+          conv2 W:(128,128,3,3) b:(128,)
+          norm weights/bias: (128,)
+        Downsample Conv2d(128,128,3x3,stride=2) W:(128,128,3,3) b:(128,)
+      Block1 (256): first resnet 128->256 has shortcut Conv2d(128,256,1x1) W:(256,128,1,1) b:(256,)
+        Downsample Conv2d(256,256,3x3,stride=2) W:(256,256,3,3) b:(256,)
+      Block2 (512): first resnet 256->512 has shortcut Conv2d(256,512,1x1) W:(512,256,1,1) b:(512,)
+        Downsample Conv2d(512,512,3x3,stride=2) W:(512,512,3,3) b:(512,)
+      Block3 (512): (no downsample)
+    (mid_block): (Resnet/Attn/Resnet at 512; attention uses Linear(512->512))
+    (conv_out): Conv2d(512, 2*latent_channels=8, 3x3) W:(8,512,3,3) b:(8,)
+
+  (quant_conv): Conv2d(8, 8, 1x1) W:(8,8,1,1) b:(8,)          # moments projection
+  (post_quant_conv): Conv2d(4, 4, 1x1) W:(4,4,1,1) b:(4,)
+
+  (decoder):
+    (conv_in): Conv2d(4,512,3x3) W:(512,4,3,3) b:(512,)
+    (up_blocks): mirror of encoder, each Resnet x2, with upsample conv (except last)
+    (conv_out): Conv2d(128,3,3x3) W:(3,128,3,3) b:(3,)
+)
+========================================
+SD 1.5 Text Encoder (CLIPTextModel: openai/clip-vit-large-patch14)
+config: vocab_size=49408, max_position_embeddings=77,
+        hidden_size=768, intermediate_size=3072,
+        num_hidden_layers=12, num_attention_heads=12
+========================================
+CLIPTextModel(
+  (text_model):
+    (embeddings):
+      (token_embedding): Embedding(49408,768)
+        W:(49408,768)
+      (position_embedding): Embedding(77,768)
+        W:(77,768)
+    (encoder): 12 x TransformerEncoderLayer(hidden=768, heads=12)
+      Each layer:
+        (self_attn):
+          q_proj: Linear(768->768) W:(768,768) b:(768,)
+          k_proj: Linear(768->768) W:(768,768) b:(768,)
+          v_proj: Linear(768->768) W:(768,768) b:(768,)
+          out_proj: Linear(768->768) W:(768,768) b:(768,)
+        (mlp):
+          fc1: Linear(768->3072) W:(3072,768) b:(3072,)
+          fc2: Linear(3072->768) W:(768,3072) b:(768,)
+        (layer_norm1): LayerNorm(768) W:(768,) b:(768,)
+        (layer_norm2): LayerNorm(768) W:(768,) b:(768,)
+    (final_layer_norm): LayerNorm(768) W:(768,) b:(768,)
+)
